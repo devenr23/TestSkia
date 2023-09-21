@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Threading;
 using System.Windows;
 using System.Windows.Forms.Integration;
+using System.Windows.Media;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using TestSkia.ViewModels;
@@ -23,6 +27,23 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = new MainWindowVM();
+
+        CompositionTarget.Rendering += CompositionTarget_Rendering;
+    }
+
+    private void CompositionTarget_Rendering(object? sender, EventArgs e)
+    {
+        if (Animate.IsChecked ?? false)
+        {
+            if (ViewSkia.IsChecked ?? false)
+            {
+                SkiaElement.InvalidateVisual();
+            }
+            else
+            {
+                GlElement.Child.Invalidate();
+            }
+        }
     }
 
     private void SkiaElement_PaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)

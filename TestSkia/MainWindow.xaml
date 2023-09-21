@@ -16,8 +16,9 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <CheckBox IsChecked="{Binding UseSkia}">Use Skia</CheckBox>
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="5,0,5,0">
+            <CheckBox x:Name="ViewSkia" IsChecked="{Binding UseSkia}">Use Skia</CheckBox>
+            <CheckBox x:Name="Animate" Margin="5,0,0,0">Animate</CheckBox>
         </StackPanel>
         <skia:SKElement x:Name="SkiaElement" Grid.Row="1" PaintSurface="SkiaElement_PaintSurface" Visibility="{Binding UseSkia, Converter={StaticResource BoolToVis}}" />
         <WindowsFormsHost x:Name="GlElement" Grid.Row="1" Initialized="GlElement_Initialized" Visibility="{Binding UseOpenGl, Converter={StaticResource BoolToVis}}" />

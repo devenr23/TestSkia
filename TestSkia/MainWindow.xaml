@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestSkia"
         xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
+        xmlns:skglwpf="clr-namespace:SKGLWpfControl;assembly=SKGLWpfControl"
         xmlns:viewmodels="clr-namespace:TestSkia.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowVM}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
@@ -21,6 +22,6 @@
             <CheckBox x:Name="Animate" Margin="5,0,0,0">Animate</CheckBox>
         </StackPanel>
         <skia:SKElement x:Name="SkiaElement" Grid.Row="1" PaintSurface="SkiaElement_PaintSurface" Visibility="{Binding UseSkia, Converter={StaticResource BoolToVis}}" />
-        <WindowsFormsHost x:Name="GlElement" Grid.Row="1" Initialized="GlElement_Initialized" Visibility="{Binding UseOpenGl, Converter={StaticResource BoolToVis}}" />
+        <skglwpf:SKGLWpfControl x:Name="GlElement" Grid.Row="1" PaintSurface="SKGLelement_PaintSurface" RenderContinuously="False" Visibility="{Binding UseOpenGl, Converter={StaticResource BoolToVis}}" />
     </Grid>
 </Window>

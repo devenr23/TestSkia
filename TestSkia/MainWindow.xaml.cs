@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Threading;
 using System.Windows;
-using System.Windows.Forms.Integration;
 using System.Windows.Media;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
@@ -23,6 +19,8 @@ public partial class MainWindow : Window
     };
     private readonly Random _random = new Random();
 
+    private SKColor _background1 = SKColors.CornflowerBlue;
+    private SKColor _background2 = SKColors.Orchid;
     public MainWindow()
     {
         InitializeComponent();
@@ -41,29 +39,19 @@ public partial class MainWindow : Window
             }
             else
             {
-                GlElement.Child.Invalidate();
+                GlElement.InvalidateVisual();
             }
         }
     }
 
     private void SkiaElement_PaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)
     {
-        DrawCanvas(e.Surface.Canvas, e.Info.Width, e.Info.Height);
+        DrawCanvas(e.Surface.Canvas, e.Info.Width, e.Info.Height, _background1);
     }
 
-    private void GlElement_Initialized(object sender, System.EventArgs e)
+    private void DrawCanvas(SKCanvas canvas, int width, int height, SKColor background)
     {
-        var glControl = new SKGLControl();
-        glControl.PaintSurface += (sender, e) => DrawCanvas(e.Surface.Canvas, e.BackendRenderTarget.Width, e.BackendRenderTarget.Height);
-        glControl.Dock = System.Windows.Forms.DockStyle.Fill;
-
-        var host = (WindowsFormsHost)sender;
-        host.Child = glControl;
-    }
-
-    private void DrawCanvas(SKCanvas canvas, int width, int height)
-    {
-        canvas.Clear(SKColor.Parse("#003366"));
+        canvas.Clear(background);
 
         for (int i = 0; i < 1000; i++)
         {
@@ -82,5 +70,10 @@ public partial class MainWindow : Window
                 y1: _random.Next(height),
                 paint: _paint);
         }
+    }
+
+    private void SKGLelement_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
+    {
+        DrawCanvas(e.Surface.Canvas, e.Info.Width, e.Info.Height,_background2);
     }
 }

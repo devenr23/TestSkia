@@ -6,9 +6,8 @@
         xmlns:local="clr-namespace:TestSkia"
         xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
         xmlns:skglwpf="clr-namespace:SKGLWpfControl;assembly=SKGLWpfControl"
-        xmlns:viewmodels="clr-namespace:TestSkia.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowVM}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Test Skia" Height="450" Width="800">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
@@ -17,11 +16,13 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="5,0,5,0">
-            <CheckBox x:Name="ViewSkia" IsChecked="{Binding UseSkia}">Use Skia</CheckBox>
-            <CheckBox x:Name="Animate" Margin="5,0,0,0">Animate</CheckBox>
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="5,5,5,5">
+            <RadioButton GroupName="mode" Margin="7,0,0,0" x:Name="UseSkElement">SkElement</RadioButton>
+            <RadioButton GroupName="mode" Margin="7,0,0,0" x:Name="UseSkGl">SKGLWpfControl</RadioButton>
+            <RadioButton GroupName="mode" Margin="7,0,0,0" x:Name="UseSkiaImage" Checked="UseSkiaImage_Checked" Unchecked="UseSkiaImage_Unchecked">SkiaImage (Threaded)</RadioButton>
         </StackPanel>
-        <skia:SKElement x:Name="SkiaElement" Grid.Row="1" PaintSurface="SkiaElement_PaintSurface" Visibility="{Binding UseSkia, Converter={StaticResource BoolToVis}}" />
-        <skglwpf:SKGLWpfControl x:Name="GlElement" Grid.Row="1" PaintSurface="SKGLelement_PaintSurface" RenderContinuously="False" Visibility="{Binding UseOpenGl, Converter={StaticResource BoolToVis}}" />
+        <skia:SKElement x:Name="SkiaElement" Grid.Row="1" PaintSurface="SkiaElement_PaintSurface" Visibility="{Binding IsChecked, ElementName=UseSkElement, Converter={StaticResource BoolToVis}}" />
+        <skglwpf:SKGLWpfControl x:Name="SkGlElement" Grid.Row="1" PaintSurface="SkGlElement_PaintSurface" RenderContinuously="False" Visibility="{Binding IsChecked, ElementName=UseSkGl, Converter={StaticResource BoolToVis}}" />
+        <local:SkiaImage Grid.Row="1" x:Name="SkiaImageElement" Visibility="{Binding IsChecked, ElementName=UseSkiaImage, Converter={StaticResource BoolToVis}}" />
     </Grid>
 </Window>

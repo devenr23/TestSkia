@@ -38,17 +38,20 @@ namespace SKGLWpfControl
 
             var mainSettings = new GLWpfControlSettings { MajorVersion = 2, MinorVersion = 1 };
 
-            this.Render += TkRender;
-
-            this.Loaded += (s, e) =>
+            if (!designMode)
             {
-                Window.GetWindow(this).Closing += (s1, e1) =>
-                {
-                    this.Dispose();
-                };
-            };
+                this.Render += TkRender;
 
-            Start(mainSettings);
+                this.Loaded += (s, e) =>
+                {
+                    Window.GetWindow(this).Closing += (s1, e1) =>
+                    {
+                        this.Dispose();
+                    };
+                };
+
+                Start(mainSettings);
+            }
         }
 
         [Bindable(false)]

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
-using TestSkia.ViewModels;
 
 namespace TestSkia;
 
@@ -12,48 +14,41 @@ namespace TestSkia;
 /// </summary>
 public partial class MainWindow : Window
 {
+    private readonly SKColor _background1 = SKColors.MediumVioletRed;
+    private readonly SKColor _background2 = SKColors.GreenYellow;
+    private readonly SKColor _background3 = SKColors.DeepSkyBlue;
     private readonly SKPaint _paint = new SKPaint
     {
         IsAntialias = true,
         Style = SKPaintStyle.Stroke
     };
     private readonly Random _random = new Random();
+    private bool _cancelImageTask = false;
 
-    private SKColor _background1 = SKColors.CornflowerBlue;
-    private SKColor _background2 = SKColors.Orchid;
     public MainWindow()
     {
         InitializeComponent();
-        DataContext = new MainWindowVM();
 
         CompositionTarget.Rendering += CompositionTarget_Rendering;
     }
 
     private void CompositionTarget_Rendering(object? sender, EventArgs e)
     {
-        if (Animate.IsChecked ?? false)
+        if (UseSkElement.IsChecked ?? false)
         {
-            if (ViewSkia.IsChecked ?? false)
-            {
-                SkiaElement.InvalidateVisual();
-            }
-            else
-            {
-                GlElement.InvalidateVisual();
-            }
+            SkiaElement.InvalidateVisual();
         }
-    }
-
-    private void SkiaElement_PaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)
-    {
-        DrawCanvas(e.Surface.Canvas, e.Info.Width, e.Info.Height, _background1);
+        else if (UseSkGl.IsChecked ?? false)
+        {
+            SkGlElement.InvalidateVisual();
+        }
     }
 
     private void DrawCanvas(SKCanvas canvas, int width, int height, SKColor background)
     {
         canvas.Clear(background);
 
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 300; i++)
         {
             _paint.Color = new SKColor(
                 red: (byte)_random.Next(255),
@@ -72,8 +67,58 @@ public partial class MainWindow : Window
         }
     }
 
-    private void SKGLelement_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
+    private void DrawTask()
     {
-        DrawCanvas(e.Surface.Canvas, e.Info.Width, e.Info.Height,_background2);
+        double maxFPS = 30;
+        double minFramePeriodMsec = 1000.0 / maxFPS;
+
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        while (!_cancelImageTask)
+        {
+            int width = 0;
+            int height = 0;
+
+            SkiaImageElement.Dispatcher.Invoke(() =>
+            {
+                width = (int)SkiaImageElement.ActualWidth;
+                height = (int)SkiaImageElement.ActualHeight;
+            });
+
+            var bmp = new SKBitmap(width, height);
+            using var canvas = new SKCanvas(bmp);
+
+            DrawCanvas(canvas, width, height, _background3);
+
+            SkiaImageElement.Source = SKImage.FromPixels(bmp.PeekPixels());
+
+            SkiaImageElement.Dispatcher.BeginInvoke(() => SkiaImageElement.InvalidateVisual());
+
+            // FPS limiter
+            double msToWait = minFramePeriodMsec - stopwatch.ElapsedMilliseconds;
+            if (msToWait > 0)
+                Thread.Sleep((int)msToWait);
+            stopwatch.Restart();
+        }
+    }
+
+    private void SkGlElement_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
+    {
+        DrawCanvas(e.Surface.Canvas, e.Info.Width, e.Info.Height, _background2);
+    }
+
+    private void SkiaElement_PaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)
+    {
+        DrawCanvas(e.Surface.Canvas, e.Info.Width, e.Info.Height, _background1);
+    }
+
+    private void UseSkiaImage_Checked(object sender, RoutedEventArgs e)
+    {
+        _cancelImageTask = false;
+        Task.Run(DrawTask);
+    }
+
+    private void UseSkiaImage_Unchecked(object sender, RoutedEventArgs e)
+    {
+        _cancelImageTask = true;
     }
 }

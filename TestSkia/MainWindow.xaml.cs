@@ -17,13 +17,13 @@ public partial class MainWindow : Window
     private readonly SKColor _background1 = SKColors.MediumVioletRed;
     private readonly SKColor _background2 = SKColors.GreenYellow;
     private readonly SKColor _background3 = SKColors.DeepSkyBlue;
-    private readonly SKPaint _paint = new SKPaint
+    private readonly SKPaint _paint = new()
     {
         IsAntialias = true,
         Style = SKPaintStyle.Stroke
     };
-    private readonly Random _random = new Random();
-    private bool _cancelImageTask = false;
+    private readonly Random _random = new();
+    private bool _cancelImageTask;
 
     public MainWindow()
     {
@@ -77,8 +77,8 @@ public partial class MainWindow : Window
 
     private void DrawTask()
     {
-        double maxFPS = 30;
-        double minFramePeriodMsec = 1000.0 / maxFPS;
+        const double maxFps = 30;
+        double minFramePeriodMsec = 1000.0 / maxFps;
 
         Stopwatch stopwatch = Stopwatch.StartNew();
         while (!_cancelImageTask)
@@ -114,7 +114,7 @@ public partial class MainWindow : Window
         DrawCanvas(e.Surface.Canvas, e.Info.Width, e.Info.Height, _background2);
     }
 
-    private void SkiaElement_PaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)
+    private void SkiaElement_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
     {
         DrawCanvas(e.Surface.Canvas, e.Info.Width, e.Info.Height, _background1);
     }

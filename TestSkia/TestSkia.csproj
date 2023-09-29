@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.WpfInterop" Version="1.9.2" />
     <PackageReference Include="SkiaSharp.Views.WPF" Version="2.88.6" />
   </ItemGroup>
 

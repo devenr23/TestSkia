@@ -20,9 +20,13 @@
             <RadioButton GroupName="mode" Margin="7,0,0,0" x:Name="UseSkElement">SkElement</RadioButton>
             <RadioButton GroupName="mode" Margin="7,0,0,0" x:Name="UseSkGl">SKGLWpfControl</RadioButton>
             <RadioButton GroupName="mode" Margin="7,0,0,0" x:Name="UseSkiaImage" Checked="UseSkiaImage_Checked" Unchecked="UseSkiaImage_Unchecked">SkiaImage (Threaded)</RadioButton>
+            <RadioButton GroupName="mode" Margin="7,0,0,0" x:Name="UseDrawingVisual">Drawing Visual</RadioButton>
+            <RadioButton GroupName="mode" Margin="7,0,0,0" x:Name="UseDrawingCanvas">Drawing Canvas</RadioButton>
         </StackPanel>
         <skia:SKElement x:Name="SkiaElement" Grid.Row="1" PaintSurface="SkiaElement_PaintSurface" Visibility="{Binding IsChecked, ElementName=UseSkElement, Converter={StaticResource BoolToVis}}" />
         <skglwpf:SKGLWpfControl x:Name="SkGlElement" Grid.Row="1" PaintSurface="SkGlElement_PaintSurface" RenderContinuously="False" Visibility="{Binding IsChecked, ElementName=UseSkGl, Converter={StaticResource BoolToVis}}" />
         <local:SkiaImage Grid.Row="1" x:Name="SkiaImageElement" Visibility="{Binding IsChecked, ElementName=UseSkiaImage, Converter={StaticResource BoolToVis}}" />
+        <local:MyDrawingVisual Grid.Row="1" x:Name="DrawingVisualElement" Visibility="{Binding IsChecked, ElementName=UseDrawingVisual, Converter={StaticResource BoolToVis}}" />
+        <local:MyCanvas Grid.Row="1" x:Name="DrawingCanvasElement" Visibility="{Binding IsChecked, ElementName=UseDrawingCanvas, Converter={StaticResource BoolToVis}}" />
     </Grid>
 </Window>

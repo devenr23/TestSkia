@@ -42,13 +42,21 @@ public partial class MainWindow : Window
         {
             SkGlElement.InvalidateVisual();
         }
+        else if (UseDrawingVisual.IsChecked ?? false)
+        {
+            DrawingVisualElement.Draw();
+        }
+        else if (UseDrawingCanvas.IsChecked ?? false)
+        {
+            DrawingCanvasElement.InvalidateVisual();
+        }
     }
 
     private void DrawCanvas(SKCanvas canvas, int width, int height, SKColor background)
     {
         canvas.Clear(background);
 
-        for (int i = 0; i < 300; i++)
+        for (int i = 0; i < 5000; i++)
         {
             _paint.Color = new SKColor(
                 red: (byte)_random.Next(255),

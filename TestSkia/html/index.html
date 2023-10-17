@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        .mapLayer {
+            border: 3px solid green;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="mapLayer" id="drawCanvas">Draw Canvas</canvas>
+
+    <script type="text/javascript">
+        var actualWidth = 100;
+        var actualHeight = 100;
+        const canvas = document.getElementById("drawCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.imageSmoothingQuality = 'high';
+
+        function resizeCanvas() {
+            actualWidth = window.innerWidth - 10;
+            actualHeight = window.innerHeight - 10;
+            canvas.width = actualWidth;
+            canvas.height = actualHeight;            
+        }
+
+        function draw() {
+            ctx.clearRect(0,0, actualWidth, actualHeight)
+            for (var i = 0; i < 5000; i++)
+            {
+                var red = Math.floor(Math.random() * 255);
+                var green = Math.floor(Math.random() * 255);
+                var blue = Math.floor(Math.random() * 255);
+                var alpha = Math.random() * 1;
+                var lineWidth = Math.floor(Math.random() * 10);
+                ctx.strokeStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+
+                var x1 = Math.floor(Math.random() * actualWidth);
+                var y1 = Math.floor(Math.random() * actualHeight);
+                var x2 = Math.floor(Math.random() * actualWidth);
+                var y2 = Math.floor(Math.random() * actualHeight);
+
+                // Start a new Path
+                ctx.lineWidth = lineWidth;
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                // Draw the Path
+                ctx.stroke();
+            }
+            window.requestAnimationFrame(draw);
+        }
+
+        window.onresize = resizeCanvas;
+        window.onload = resizeCanvas;
+        resizeCanvas();
+        draw();
+    </script>
+</body>
+
+</html>

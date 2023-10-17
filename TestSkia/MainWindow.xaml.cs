@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -49,7 +51,7 @@ public partial class MainWindow : Window
         else if (UseDrawingCanvas.IsChecked ?? false)
         {
             DrawingCanvasElement.InvalidateVisual();
-        }
+        } 
     }
 
     private void DrawCanvas(SKCanvas canvas, int width, int height, SKColor background)
@@ -128,5 +130,19 @@ public partial class MainWindow : Window
     private void UseSkiaImage_Unchecked(object sender, RoutedEventArgs e)
     {
         _cancelImageTask = true;
+    }
+
+    private async void UseWebView_Checked(object sender, RoutedEventArgs e)
+    {
+        await MobiusX.EnsureCoreWebView2Async(null);
+        var localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        MobiusX.CoreWebView2.SetVirtualHostNameToFolderMapping("demo", localPath, Microsoft.Web.WebView2.Core.CoreWebView2HostResourceAccessKind.Allow);
+        MobiusX.CoreWebView2.Navigate("https://demo/html/index.html");
+
+    }
+
+    private void UseWebView_Unchecked(object sender, RoutedEventArgs e)
+    {
+
     }
 }

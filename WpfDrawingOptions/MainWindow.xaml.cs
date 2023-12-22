@@ -9,7 +9,7 @@ using System.Windows.Media;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
-namespace TestSkia;
+namespace WpfDrawingOptions;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml

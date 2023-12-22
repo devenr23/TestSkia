@@ -4,7 +4,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using SkiaSharp;
 
-namespace TestSkia;
+namespace WpfDrawingOptions;
 
 public class SkiaImage : FrameworkElement
 {

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace TestSkia;
+namespace WpfDrawingOptions;
 public class MyDrawingVisual : FrameworkElement
 {
     // Create a collection of child visual objects.

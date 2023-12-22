@@ -1,12 +1,12 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Framework.WpfInterop;
 using MonoGame.Framework.WpfInterop.Input;
-using System;
-using SharpDX.Direct3D9;
+
 //using System.Windows.Media;
 
-namespace TestSkia;
+namespace WpfDrawingOptions;
 public class MyMonoGame : WpfGame
 {
     private IGraphicsDeviceService _graphicsDeviceManager;

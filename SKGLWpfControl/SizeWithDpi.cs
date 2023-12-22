@@ -1,37 +1,36 @@
-﻿namespace SKGLWpfControl
+﻿namespace SKGLWpfControl;
+
+public struct SizeWithDpi
 {
-    public struct SizeWithDpi
+    public static SizeWithDpi Empty = new SizeWithDpi(0, 0);
+
+    public int Width;
+    public int Height;
+    public double DpiX;
+    public double DpiY;
+
+    public SizeWithDpi(int width, int height, double dpiX = 96.0, double dpiY = 96.0)
     {
-        public static SizeWithDpi Empty = new SizeWithDpi(0, 0);
+        Width = width;
+        Height = height;
+        DpiX = dpiX;
+        DpiY = dpiY;
+    }
 
-        public int Width;
-        public int Height;
-        public double DpiX;
-        public double DpiY;
+    public override bool Equals(object obj)
+    {
+        return obj is SizeWithDpi dpi &&
+               Width == dpi.Width &&
+               Height == dpi.Height &&
+               DpiX == dpi.DpiX &&
+               DpiY == dpi.DpiY;
+    }
 
-        public SizeWithDpi(int width, int height, double dpiX = 96.0, double dpiY = 96.0)
-        {
-            Width = width;
-            Height = height;
-            DpiX = dpiX;
-            DpiY = dpiY;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is SizeWithDpi dpi &&
-                   Width == dpi.Width &&
-                   Height == dpi.Height &&
-                   DpiX == dpi.DpiX &&
-                   DpiY == dpi.DpiY;
-        }
-
-        public bool Equals(SizeWithDpi dpi)
-        {
-            return Width == dpi.Width &&
-                   Height == dpi.Height &&
-                   DpiX == dpi.DpiX &&
-                   DpiY == dpi.DpiY;
-        }
+    public bool Equals(SizeWithDpi dpi)
+    {
+        return Width == dpi.Width &&
+               Height == dpi.Height &&
+               DpiX == dpi.DpiX &&
+               DpiY == dpi.DpiY;
     }
 }

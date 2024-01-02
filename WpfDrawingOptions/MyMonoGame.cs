@@ -68,6 +68,8 @@ public class MyMonoGame : WpfGame
             DrawLine(batch, point1, point2, color, width);
         }
 
+        FrameRateMonitor.Instance.DrawCalled();
+
         batch.End();
         base.Draw(time);
     }
@@ -77,7 +79,8 @@ public class MyMonoGame : WpfGame
         Rectangle r = new Rectangle((int)begin.X, (int)begin.Y, (int)(end - begin).Length() + width, width);
         Vector2 v = Vector2.Normalize(begin - end);
         float angle = (float)Math.Acos(Vector2.Dot(v, -Vector2.UnitX));
-        if (begin.Y > end.Y) angle = MathHelper.TwoPi - angle;
+        if (begin.Y > end.Y)
+            angle = MathHelper.TwoPi - angle;
         spriteBatch.Draw(_pixel, r, null, color, angle, Vector2.Zero, SpriteEffects.None, 0);
     }
 }

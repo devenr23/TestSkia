@@ -5,11 +5,20 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms.Integration;
 using System.Windows.Media;
+using Microsoft.Web.WebView2.Core;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
 namespace WpfDrawingOptions;
+
+public static class TestConstants
+{
+    // When you change this, don't forget to also change the number in index.html (they aren't linked)
+    // Then save, clean, and rebuild all projects
+    public const int NumberOfLines = 5_000;
+}
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
@@ -31,7 +40,21 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        DataContext = this;
+
+        SetupWindowsFormsControls();
+
         CompositionTarget.Rendering += CompositionTarget_Rendering;
+    }
+
+    public FrameRateMonitor FrameRateMonitor => FrameRateMonitor.Instance;
+
+    private void SetupWindowsFormsControls()
+    {
+        var host = new WindowsFormsHost();
+        var winFormsControl = new MyWinFormsControl();
+        host.Child = winFormsControl;
+        WindowsFormsElement.Child = host;
     }
 
     private void CompositionTarget_Rendering(object? sender, EventArgs e)
@@ -51,14 +74,26 @@ public partial class MainWindow : Window
         else if (UseDrawingCanvas.IsChecked ?? false)
         {
             DrawingCanvasElement.InvalidateVisual();
-        } 
+        }
+        else if (UseStreamGeometry.IsChecked ?? false)
+        {
+            StreamGeometryElement.InvalidateVisual();
+        }
+        else if (UseWindowsForms.IsChecked ?? false)
+        {
+            (WindowsFormsElement.Child as WindowsFormsHost)?.Child.Invalidate();
+        }
+        else if (UseSharpDX.IsChecked ?? false)
+        {
+            SharpDxControlElement.InvalidateVisual();
+        }
     }
 
     private void DrawCanvas(SKCanvas canvas, int width, int height, SKColor background)
     {
         canvas.Clear(background);
 
-        for (int i = 0; i < 5000; i++)
+        for (int i = 0; i < TestConstants.NumberOfLines; i++)
         {
             _paint.Color = new SKColor(
                 red: (byte)_random.Next(255),
@@ -75,12 +110,14 @@ public partial class MainWindow : Window
                 y1: _random.Next(height),
                 paint: _paint);
         }
+
+        FrameRateMonitor.Instance.DrawCalled();
     }
 
     private void DrawTask()
     {
         const double maxFps = 30;
-        double minFramePeriodMsec = 1000.0 / maxFps;
+        double minFramePeriod = 1000.0 / maxFps;
 
         Stopwatch stopwatch = Stopwatch.StartNew();
         while (!_cancelImageTask)
@@ -104,7 +141,7 @@ public partial class MainWindow : Window
             SkiaImageElement.Dispatcher.BeginInvoke(() => SkiaImageElement.InvalidateVisual());
 
             // FPS limiter
-            double msToWait = minFramePeriodMsec - stopwatch.ElapsedMilliseconds;
+            double msToWait = minFramePeriod - stopwatch.ElapsedMilliseconds;
             if (msToWait > 0)
                 Thread.Sleep((int)msToWait);
             stopwatch.Restart();
@@ -136,13 +173,19 @@ public partial class MainWindow : Window
     {
         await MobiusX.EnsureCoreWebView2Async(null);
         var localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        MobiusX.CoreWebView2.SetVirtualHostNameToFolderMapping("demo", localPath, Microsoft.Web.WebView2.Core.CoreWebView2HostResourceAccessKind.Allow);
+        MobiusX.CoreWebView2.SetVirtualHostNameToFolderMapping("demo", localPath, CoreWebView2HostResourceAccessKind.Allow);
         MobiusX.CoreWebView2.Navigate("https://demo/html/index.html");
+    }
 
+    private void ReceiveMessageFromJavaScript(object? sender, CoreWebView2WebMessageReceivedEventArgs args)
+    {
+        var message = args.WebMessageAsJson;
+        if (message == "\"Draw Called\"")
+            FrameRateMonitor.Instance.DrawCalled();
     }
 
     private void UseWebView_Unchecked(object sender, RoutedEventArgs e)
     {
-
+        MobiusX.CoreWebView2.WebMessageReceived -= ReceiveMessageFromJavaScript;
     }
 }

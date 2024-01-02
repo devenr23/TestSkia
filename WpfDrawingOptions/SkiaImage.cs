@@ -14,10 +14,7 @@ public class SkiaImage : FrameworkElement
 
     public SKImage? Source
     { 
-        get
-        {
-            return _image;
-        }
+        get => _image;
         set
         {
             lock(this)

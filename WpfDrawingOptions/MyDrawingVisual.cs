@@ -8,12 +8,11 @@ public class MyDrawingVisual : FrameworkElement
     // Create a collection of child visual objects.
     private readonly VisualCollection _children;
     private readonly Random _random = new();
-    private const int NUM_LINES = 5000;
 
     public MyDrawingVisual()
     {
         _children = new VisualCollection(this);
-        for (var i = 0; i < NUM_LINES; i++)
+        for (var i = 0; i < TestConstants.NumberOfLines; i++)
         {
             _children.Add(new DrawingVisual());
         }
@@ -21,7 +20,7 @@ public class MyDrawingVisual : FrameworkElement
 
     public void Draw()
     {
-        for (int i = 0; i < NUM_LINES; i++)
+        for (int i = 0; i < TestConstants.NumberOfLines; i++)
         {
             var color = new Color
             {
@@ -40,6 +39,8 @@ public class MyDrawingVisual : FrameworkElement
                 color,
                 _random.Next(1, 10));
         }
+
+        FrameRateMonitor.Instance.DrawCalled();
     }
 
     private void DrawLine(int childIndex, int x1, int y1, int x2, int y2, Color color, int strokeWidth)

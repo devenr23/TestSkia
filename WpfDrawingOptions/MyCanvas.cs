@@ -10,7 +10,7 @@ public class MyCanvas : FrameworkElement
 
     protected override void OnRender(DrawingContext drawingContext)
     {
-        for (int i = 0; i < 5000; i++)
+        for (int i = 0; i < TestConstants.NumberOfLines; i++)
         {
             var color = new Color
             {
@@ -26,5 +26,7 @@ public class MyCanvas : FrameworkElement
 
             drawingContext.DrawLine(pen, point1, point2);
         }
+
+        FrameRateMonitor.Instance.DrawCalled();
     }
 }

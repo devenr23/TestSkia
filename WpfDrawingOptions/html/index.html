@@ -14,9 +14,9 @@
     </style>
 </head>
 <body>
-    <canvas class="mapLayer" id="drawCanvas">Draw Canvas</canvas>
+<canvas class="mapLayer" id="drawCanvas">Draw Canvas</canvas>
 
-    <script type="text/javascript">
+<script type="text/javascript">
         var actualWidth = 100;
         var actualHeight = 100;
         const canvas = document.getElementById("drawCanvas");
@@ -27,13 +27,12 @@
             actualWidth = window.innerWidth - 10;
             actualHeight = window.innerHeight - 10;
             canvas.width = actualWidth;
-            canvas.height = actualHeight;            
+            canvas.height = actualHeight;
         }
 
         function draw() {
-            ctx.clearRect(0,0, actualWidth, actualHeight)
-            for (var i = 0; i < 5000; i++)
-            {
+            ctx.clearRect(0, 0, actualWidth, actualHeight)
+            for (var i = 0; i < 5000; i++) {
                 var red = Math.floor(Math.random() * 255);
                 var green = Math.floor(Math.random() * 255);
                 var blue = Math.floor(Math.random() * 255);
@@ -54,6 +53,7 @@
                 // Draw the Path
                 ctx.stroke();
             }
+            window.chrome.webview.postMessage('Draw Called');
             window.requestAnimationFrame(draw);
         }
 

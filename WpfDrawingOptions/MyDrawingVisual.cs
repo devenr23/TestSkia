@@ -5,10 +5,9 @@ using System.Windows.Media;
 namespace WpfDrawingOptions;
 public class MyDrawingVisual : FrameworkElement
 {
-    // Create a collection of child visual objects.
     private readonly VisualCollection _children;
-    private readonly DrawingVisual _visual = new();
     private readonly Random _random = new();
+    private readonly DrawingVisual _visual = new();
 
     public MyDrawingVisual()
     {
@@ -47,7 +46,7 @@ public class MyDrawingVisual : FrameworkElement
     }
 
     // Provide a required override for the VisualChildrenCount property.
-    protected override int VisualChildrenCount => 1;
+    protected override int VisualChildrenCount => _children.Count;
 
     // Provide a required override for the GetVisualChild method.
     protected override Visual GetVisualChild(int index)
@@ -57,6 +56,6 @@ public class MyDrawingVisual : FrameworkElement
             throw new ArgumentOutOfRangeException(nameof(index));
         }
 
-        return _visual;
+        return _children[0];
     }
 }

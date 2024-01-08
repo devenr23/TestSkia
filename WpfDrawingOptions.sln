@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SKGLWpfControl", "SKGLWpfCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfDrawingOptions", "WpfDrawingOptions\WpfDrawingOptions.csproj", "{FA4E04EF-0831-4FC2-BC2C-0F7599E69944}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B4E3D983-9B0A-4519-B8F3-1D9D9087C554}"
+	ProjectSection(SolutionItems) = preProject
+		Drawing Performance Comparisons.xlsx = Drawing Performance Comparisons.xlsx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

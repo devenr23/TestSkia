@@ -7,20 +7,20 @@ public class MyDrawingVisual : FrameworkElement
 {
     // Create a collection of child visual objects.
     private readonly VisualCollection _children;
+    private readonly DrawingVisual _visual = new();
     private readonly Random _random = new();
 
     public MyDrawingVisual()
     {
-        _children = new VisualCollection(this);
-        for (var i = 0; i < TestConstants.NumberOfLines; i++)
-        {
-            _children.Add(new DrawingVisual());
-        }
+        _children = new VisualCollection(this) { _visual };
     }
 
     public void Draw()
     {
-        for (int i = 0; i < TestConstants.NumberOfLines; i++)
+        // Retrieve the DrawingContext in order to create new drawing content.
+        var context = _visual.RenderOpen();
+
+        for (var i = 0; i < TestConstants.NumberOfLines; i++)
         {
             var color = new Color
             {
@@ -30,48 +30,33 @@ public class MyDrawingVisual : FrameworkElement
                 A = (byte)_random.Next(255)
             };
 
-            DrawLine(
-                i,
-                _random.Next((int) ActualWidth),
-                _random.Next((int) ActualHeight),
-                _random.Next((int) ActualWidth),
-                _random.Next((int) ActualHeight),
-                color,
-                _random.Next(1, 10));
+            var pen = new Pen
+            {
+                Brush = new SolidColorBrush(color),
+                Thickness = _random.Next(1, 10),
+            };
+            context.DrawLine(pen, 
+                new Point(_random.Next((int) ActualWidth), _random.Next((int) ActualHeight)), 
+                new Point(_random.Next((int) ActualWidth), _random.Next((int) ActualHeight)));
         }
+
+        // Persist the drawing content.
+        context.Close();
 
         FrameRateMonitor.Instance.DrawCalled();
     }
 
-    private void DrawLine(int childIndex, int x1, int y1, int x2, int y2, Color color, int strokeWidth)
-    {
-        var drawingVisual = (DrawingVisual) _children[childIndex];
-
-        // Retrieve the DrawingContext in order to create new drawing content.
-        DrawingContext drawingContext = drawingVisual.RenderOpen();
-
-        var pen = new Pen
-        {
-            Brush = new SolidColorBrush(color),
-            Thickness = strokeWidth,
-        };
-        drawingContext.DrawLine(pen, new Point(x1, y1), new Point(x2, y2));
-
-        // Persist the drawing content.
-        drawingContext.Close();
-    }
-
     // Provide a required override for the VisualChildrenCount property.
-    protected override int VisualChildrenCount => _children.Count;
+    protected override int VisualChildrenCount => 1;
 
     // Provide a required override for the GetVisualChild method.
     protected override Visual GetVisualChild(int index)
     {
-        if (index < 0 || index >= _children.Count)
+        if (index != 0)
         {
             throw new ArgumentOutOfRangeException(nameof(index));
         }
 
-        return _children[index];
+        return _visual;
     }
 }

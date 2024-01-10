@@ -59,31 +59,35 @@ public partial class MainWindow : Window
 
     private void CompositionTarget_Rendering(object? sender, EventArgs e)
     {
-        if (UseSkElement.IsChecked ?? false)
+        if (UseSkElement.IsSelected)
         {
             SkiaElement.InvalidateVisual();
         }
-        else if (UseSkGl.IsChecked ?? false)
+        else if (UseSkGl.IsSelected)
         {
             SkGlElement.InvalidateVisual();
         }
-        else if (UseDrawingVisual.IsChecked ?? false)
+        else if (UseDrawingVisual.IsSelected)
         {
             DrawingVisualElement.Draw();
         }
-        else if (UseDrawingCanvas.IsChecked ?? false)
+        else if (UseDrawingCanvas.IsSelected)
         {
             DrawingCanvasElement.InvalidateVisual();
         }
-        else if (UseStreamGeometry.IsChecked ?? false)
+        else if (UseStreamGeometry.IsSelected)
         {
             StreamGeometryElement.InvalidateVisual();
         }
-        else if (UseWindowsForms.IsChecked ?? false)
+        else if (UseGeometryDrawing.IsSelected)
+        {
+            GeometryDrawingElement.InvalidateVisual();
+        }
+        else if (UseWindowsForms.IsSelected)
         {
             (WindowsFormsElement.Child as WindowsFormsHost)?.Child.Invalidate();
         }
-        else if (UseSharpDX.IsChecked ?? false)
+        else if (UseSharpDX.IsSelected)
         {
             SharpDxControlElement.InvalidateVisual();
         }
@@ -158,18 +162,18 @@ public partial class MainWindow : Window
         DrawCanvas(e.Surface.Canvas, e.Info.Width, e.Info.Height, _background1);
     }
 
-    private void UseSkiaImage_Checked(object sender, RoutedEventArgs e)
+    private void UseSkiaImage_Selected(object sender, RoutedEventArgs e)
     {
         _cancelImageTask = false;
         Task.Run(DrawTask);
     }
 
-    private void UseSkiaImage_Unchecked(object sender, RoutedEventArgs e)
+    private void UseSkiaImage_Unselected(object sender, RoutedEventArgs e)
     {
         _cancelImageTask = true;
     }
 
-    private async void UseWebView_Checked(object sender, RoutedEventArgs e)
+    private async void UseWebView_Selected(object sender, RoutedEventArgs e)
     {
         await MobiusX.EnsureCoreWebView2Async(null);
         var localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -184,7 +188,7 @@ public partial class MainWindow : Window
             FrameRateMonitor.Instance.DrawCalled();
     }
 
-    private void UseWebView_Unchecked(object sender, RoutedEventArgs e)
+    private void UseWebView_Unselected(object sender, RoutedEventArgs e)
     {
         MobiusX.CoreWebView2.WebMessageReceived -= ReceiveMessageFromJavaScript;
     }

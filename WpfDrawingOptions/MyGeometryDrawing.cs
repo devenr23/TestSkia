@@ -4,13 +4,13 @@ using System.Windows.Media;
 
 namespace WpfDrawingOptions;
 
-public class MyStreamGeometryRendering : FrameworkElement
+public class MyGeometryDrawing : FrameworkElement
 {
 	private readonly Random _random = new();
 	
-	private static StreamGeometry? _staticGeometry;
+	private static GeometryDrawing? _drawing;
 
-    public StreamGeometry MakeConnectedGeometry()
+    public GeometryDrawing MakeDrawing()
 	{
 		var geometry = new StreamGeometry();
 		var context = geometry.Open();
@@ -27,7 +27,11 @@ public class MyStreamGeometryRendering : FrameworkElement
 
 		context.Close();
 		geometry.Freeze();
-		return geometry;
+
+        return new GeometryDrawing
+        {
+            Geometry = geometry
+        };
 	}
 
 	protected override void OnRender(DrawingContext drawingContext)
@@ -42,10 +46,10 @@ public class MyStreamGeometryRendering : FrameworkElement
 
 		var pen = new Pen(new SolidColorBrush(color), _random.Next(1, 10));
 
-		_staticGeometry ??= MakeConnectedGeometry();
+		_drawing ??= MakeDrawing();
+        _drawing.Pen = pen;
 
-		var geometry = _staticGeometry;
-		drawingContext.DrawGeometry(null, pen, geometry);
+		drawingContext.DrawDrawing(_drawing);
 
 		FrameRateMonitor.Instance.DrawCalled();
 	}
